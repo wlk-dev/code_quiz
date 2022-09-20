@@ -31,33 +31,26 @@ var quiz = {
     listElem : document.querySelector("ol"),
     listChars : "abcdefghijklmnopqrstuvwxyz",
 
-    solutionIndex : 0,
+    questions : [],
 
-    displayQuestion : function (question="Question?") {
+    displayQuestionText : function (question="Question?") {
         this.questionElem.textContent = question;
     },
 
-    displayAnswers : function (answers=["A1", "A2", "A3", "A4"]) {
+    displayAnswersText : function (answers=["A1", "A2", "A3", "A4"]) {
         removeChildElements(this.listElem);
         for(var i = 0; i < answers.length; i++) {
-            var newElement = document.createElement("button");
+            var newElement = document.createElement("button"); // :TODO separte the element building into a separate function
             newElement.textContent = `${this.listChars.charAt(i)}. ${answers[i]}`; // prepends : a,b,c,d, etc to the answer
             newElement.setAttribute("id", `ans-${i}`); // adds an indexed id to each element 
             this.listElem.appendChild( newElement ); // adds new element to the parent element
-        }
-    },
-
-    addListeners : function (total) {
-        for (var i = 0; i < total; i++) {
-            var elem = document.getElementById(`ans-${i}`); // get each answer elem by the indexed id
-            elem.solutionIndex = this.solutionIndex
-            console.log(this.solutionIndex)
-            elem.addEventListener("click", this.evaluateAnswer)
+            // prefix attributes with data-
         }
     },
 
     evaluateAnswer : function (evt) {
-        if (evt.currentTarget.id === String(`ans-${evt.currentTarget.solutionIndex}`)){
+        console.log(evt.target)
+        if (evt.target.id === String(`ans-${evt.target.solutionIndex}`)){
             console.log("Correct Answer");
         } else {
             console.log("Incorrect Answer");
@@ -66,7 +59,41 @@ var quiz = {
         // nextQuestionCallback()
     },
 
+    addListeners : function (total, solutionIndex) {
+        for (var i = 0; i < total; i++) {
+            var elem = document.getElementById(`ans-${i}`); // get each answer elem by the indexed id
+            elem.solutionIndex = solutionIndex
+            elem.addEventListener("click", this.evaluateAnswer)
+        }
+    },
 
+    addQuestion : function (question) {
+        this.questions.append(question);
+    },
+
+    // we need a function to wrap this function, that is then used as a callback for the event listeners
+    // just refactor this shit honestly
+    popQuestion : function () {
+        if ( !!this.questions.length ) { // if no questions are left return false
+            return false;
+        } else {
+            var question = this.questions.pop()
+            this.displayQuestionText(question.questionText)
+            this.displayAnswersText(questions.answers)
+            this.addListeners(questions.len, question.solutionIndex)
+            return true;
+        }
+    }
+
+}
+
+class Question {
+    constructor(questionText, answers, solutionIndex) {
+        this.questionText = questionText;
+        this.answers = answers;
+        this.solutionIndex = solutionIndex;
+        this.len = answers.length
+    }
 }
 
 function removeChildElements (element) {
@@ -87,6 +114,6 @@ function toggleElementDisplay(element, preferredDisplay="block") {
 }
 
 toggleElementDisplay(document.querySelector(".quiz-prompt"));
-quiz.displayQuestion();
-quiz.displayAnswers();
+quiz.displayQuestionText();
+quiz.displayAnswersText();
 quiz.addListeners(4, 0);

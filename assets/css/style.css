@@ -84,3 +84,35 @@ p {
 #start-btn:active {
     transform: scale(1.05);
 }
+
+
+div.question-section {
+    padding: 5%;
+}
+
+h2 {
+    font-size: x-large;
+}
+
+ol {
+    display: flex;
+    flex-direction: column;
+}
+
+ol button {
+    text-align: left;
+    border-radius: 4px;
+    width: 25%;
+    padding: .5% .5%;
+    margin-top: 1%;
+    transition: .3s;
+}
+
+ol button:hover {
+    color: var(--light-color);
+    background-color: #333;
+}
+
+ol button:active {
+    transform: scale(1.1);
+}

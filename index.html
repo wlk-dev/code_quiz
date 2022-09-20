@@ -10,14 +10,20 @@
 </head>
 <body>
     <header>
-        <h1>Coding Quiz Challenge</h1>
-        <p>
-            Try to answer the following code-related questions within the time limit.
-            Keep in mind that incorrect answers will penalize your scoretime by then seconds!
-        </p>
-        <button id="start-btn">Start Quiz</button>
+        <nav>
+            <a id="score-link" href="#scores">Scoreboard</a>
+            <span id="quiz-timer">Time left: 0</span>
+        </nav>
     </header>
     <main>
+        <div class="quiz-prompt">
+            <h1>Coding Quiz Challenge</h1>
+            <p>
+                Try to answer the following code-related questions within the time limit.
+                Keep in mind that incorrect answers will penalize your scoretime by then seconds!
+            </p>
+            <button id="start-btn">Start Quiz</button>
+        </div>
         <div class="question-section">
             <h2 class="question"></h2>
             <div class="options"></div>

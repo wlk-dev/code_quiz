@@ -16,8 +16,15 @@ body {
 
 
 header {
+    position: absolute;
+    top: 0;
+    width: 100%;
     padding: 1.7%;
     background-color: var(--dark-color);
+}
+
+main {
+    margin-top: 7%;
 }
 
 #quiz-timer, #score-link {
@@ -87,25 +94,31 @@ p {
 
 
 div.question-section {
-    padding: 5%;
+    padding: 2%;
+}
+
+#question-bottom, #question-top {
+    display: block;
+    margin: 0 auto;
+    max-width: 20vw;
+    border-bottom: 1px solid var(--dark-color);
 }
 
 h2 {
     font-size: x-large;
-}
-
-ol {
-    display: flex;
-    flex-direction: column;
+    text-align: center;
+    margin-top: .5%;
+    margin-bottom: 2%;
 }
 
 ol button {
-    text-align: left;
+    display: block;
+    margin: .5% auto;
     border-radius: 4px;
-    width: 25%;
     padding: .5% .5%;
-    margin-top: 1%;
+    background-color: var(--bg-color);
     transition: .3s;
+
 }
 
 ol button:hover {
@@ -115,4 +128,16 @@ ol button:hover {
 
 ol button:active {
     transform: scale(1.1);
+}
+
+@media screen and (max-width: 992px) {
+    header {
+        padding: 2%;
+    }
+}
+
+@media screen and (max-width: 628px) {
+    header {
+        padding: 3.2%;
+    }
 }

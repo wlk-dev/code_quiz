@@ -102,7 +102,7 @@ p {
 }
 
 
-div.quiz-section {
+div.quiz-section, div.quiz-scoreboard {
     padding: 2%;
 }
 
@@ -129,7 +129,7 @@ h2 {
     margin-bottom: 2%;
 }
 
-ol button {
+ol button, #submit-result, #reset-score {
     display: block;
     margin: .5% auto;
     border-radius: 4px;
@@ -139,38 +139,29 @@ ol button {
 
 }
 
-ol button:hover, #score-submit button:hover {
+ol button:hover, #submit-result:hover, #reset-score:hover {
     color: var(--light-color);
     background-color: #333;
 }
 
-ol button:active, #score-submit button:active {
+ol button:active, #submit-result:active, #reset-score:hover {
     transform: scale(1.1);
 }
-
 
 .post-quiz {
     display: flex;
     flex-direction: column;
+    justify-items: center;
     align-items: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+label {
+    margin: 1% 0;
+}
 .post-quiz h2 {
     font-weight: bold;
     margin: 0;
-}
-
-#score-submit {
-    width: 20vw;
-    padding: 1% 0;
-}
-
-#score-submit button {
-    border-radius: 4px;
-    padding: 0 .5%;
-    background-color: var(--bg-color);
-    transition: .3s;
 }
 
 @media screen and (max-width: 992px) {

@@ -39,7 +39,7 @@ var timer = {
             self.tickTime();
             if (self.timeLeft === 0) {
                 self.stopTimer()
-                return; // add callback
+                quizFailed();
             }
 
         }, 1000)
@@ -110,8 +110,15 @@ var scoreBoard = {
     aware : false,
     currentIndex : 0,
 
+    currentScore : 0,
+
     submitPrompt : document.querySelector(".post-quiz"), // submit score screen
+    submitBtn : document.querySelector("#submit-result"),
+    scoreBoard : document.querySelector(".quiz-scoreboard"),
+    scoreTable : document.querySelector("#score-table"),
+
     promptVisible : true,
+    scoreBoardVisible : true,
 
     init : function () { // in hindsight, i could probably store all scores in a single key, value pair
         var result;
@@ -129,8 +136,8 @@ var scoreBoard = {
             console.warn("Please init the scoreboard before trying to use it.")
             return;
         }
-        localStorage.setItem("qsb-tr-idx", this.currentIndex);
         this.currentIndex++;
+        localStorage.setItem("qsb-tr-idx", this.currentIndex);
     },
 
     addScore : function (nickname, score) {
@@ -138,6 +145,8 @@ var scoreBoard = {
             console.warn("Please init the scoreboard before trying to use it.")
             return;
         }
+
+        // use JSON.stringify
         nickname = nickname.replaceAll(":", "-"); // : is used to separate data, so we dont want that being in the nickname
         localStorage.setItem(String(`qsb-sc-${this.currentIndex}`), String(`${nickname}:${score}`))
         this.updateTracking();
@@ -150,12 +159,22 @@ var scoreBoard = {
         }
         var scores = [];
         for ( var i = 0; i < this.currentIndex; i++ ) {
-            var item = localStorage.getItem( `qsb-sc-${i}` );
+            var item = localStorage.getItem( `qsb-sc-${i}` ).split(":");
             if ( item ) {
                 scores.push( { name : item[0], score : item[1] } )
             }
         }
         return scores;
+    },
+
+    fillScoreTable : function () {
+        removeChildElements( this.scoreTable )
+        var scores = this.getScores()
+        var elements = createListElements(scores.length, 0);
+        for ( const idx in  elements) {
+            elements[idx].textContent = String(`${scores[idx].name} : ${scores[idx].score}`);
+            this.scoreTable.appendChild(elements[idx]);
+        }
     },
 
     clearScoreBoardData : function () { // clears all data related to the scoreboard from localStorage
@@ -165,10 +184,18 @@ var scoreBoard = {
             }
         }
         this.currentIndex = 0;
+
+        scoreBoard.init() // idk why this.init doesnt work
     },
 
     togglePromptVisible : function () {
+        $("#final-score").text( String(`${this.currentScore}/50`) );
         this.promptVisible = toggleElementDisplay(this.submitPrompt, "flex");
+    },
+
+    toggleScoreBoardVisible : function () {
+        scoreBoard.fillScoreTable();
+        this.scoreBoardVisible = toggleElementDisplay(this.scoreBoard)
     },
 
 }
@@ -217,16 +244,18 @@ quizState.listElem.addEventListener("click", function (event) {
         if ( event.target.dataset.ans ) {
             console.log("Correct Answer!")
             quizState.resultElem.textContent = "Correct!"
+            scoreBoard.currentScore += 10
         } else {
             console.log("Wrong Answer!")
             quizState.resultElem.textContent = "Wrong!" // probably move this shit into a function, and have a fade out (do fade out stuff last, seems a bit time consuming)
-
+            timer.invokePenalty();
         }
 
         var ques;
         if ( (ques = questionBank.nextQuestion()) ) {
             quizState.presentQuestion(ques);
         } else {
+            timer.stopTimer();
             quizState.toggleQuizVisible();
             scoreBoard.togglePromptVisible();
             console.log("Quiz over!")
@@ -238,7 +267,61 @@ quizState.listElem.addEventListener("click", function (event) {
 quizState.startElem.addEventListener("click", function () {
     quizState.togglePromptVisible();
     quizState.toggleQuizVisible();
+    scoreBoard.currentScore = 0;
+    timer.resetTimer();
+    timer.startTimer();
 });
+
+
+scoreBoard.submitBtn.addEventListener("click", function () {
+    var initials = $("#initials").val();
+    if ( !initials ) {
+        initials = "anon"
+    }
+
+    scoreBoard.addScore(initials, String(`${scoreBoard.currentScore}/50`))
+    scoreBoard.togglePromptVisible();
+    scoreBoard.toggleScoreBoardVisible();
+
+});
+
+$("#reset-score").click( function () {
+    scoreBoard.clearScoreBoardData();
+    scoreBoard.fillScoreTable();
+});
+
+$("#score-link").click( function () {
+    if ( quizState.promptVisible ) {
+        quizState.togglePromptVisible();
+    } else if ( quizState.quizVisible ) {
+        quizState.toggleQuizVisible();
+    }
+
+    timer.resetTimer();
+    scoreBoard.currentScore = 0;
+    scoreBoard.toggleScoreBoardVisible();
+});
+
+$("#home-link").click( function () {
+    if ( scoreBoard.scoreBoardVisible ) {
+        scoreBoard.toggleScoreBoardVisible()
+    } else if (scoreBoard.promptVisible) {
+        scoreBoard.togglePromptVisible();
+    }
+
+    timer.resetTimer();
+    scoreBoard.currentScore = 0;
+    quizState.togglePromptVisible();
+});
+
+
+function quizFailed () {
+    timer.stopTimer();
+    questionBank.setQuestion(0);
+    quizState.toggleQuizVisible();
+    scoreBoard.togglePromptVisible();
+    scoreBoard.currentScore = "failed";
+}
 
 function createListElements(length, ansIndex) { // this works as well
     var list = [];
@@ -272,6 +355,7 @@ function main () {
     // quizState.togglePromptVisible();
     quizState.toggleQuizVisible();
     scoreBoard.togglePromptVisible();
+    scoreBoard.toggleScoreBoardVisible();
     
     questionBank.addQuestion( "Commonly used data types DO NOT include:", ["strings", "booleans", "alerts", "numbers"], 2 );
     questionBank.addQuestion( "The condition in an if / else statement is enclosed with ____.", ["quotes", "curly brackets", "parentheses", "square brackets"], 2 );

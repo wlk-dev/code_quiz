@@ -35,15 +35,19 @@
         </div>
         <div class="post-quiz">
             <h2>All done!</h2>
-            <p>Your final score is /50.</p>
-            <div id="score-submit">
-                <span>Enter initials: </span>
-                <input type="text" />
-                <button>Submit</button>
-            </div>
+            <p>Your final score is <span id="final-score">/50</span>.</p>
+            <label for="initials">Enter your initials: </label>
+            <input id="initials" placeholder="WK" type="text" />
+            <button id="submit-result">Submit</button>
         </div>
+        <div class="quiz-scoreboard">
+            <button id="reset-score">Reset Scoreboard</button>
+            <ol id="score-table"></ol>
+        </div>
+
     </main>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="assets/scripts/script.js"></script>
 </body>
 </html>

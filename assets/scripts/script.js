@@ -297,8 +297,7 @@ $("#score-link").click( function () {
         quizState.toggleQuizVisible();
     }
 
-    timer.resetTimer();
-    scoreBoard.currentScore = 0;
+    generalStateReset()
     scoreBoard.toggleScoreBoardVisible();
 });
 
@@ -307,13 +306,21 @@ $("#home-link").click( function () {
         scoreBoard.toggleScoreBoardVisible()
     } else if (scoreBoard.promptVisible) {
         scoreBoard.togglePromptVisible();
+    } else if ( quizState.quizVisible ) {
+        quizState.toggleQuizVisible();
     }
 
-    timer.resetTimer();
-    scoreBoard.currentScore = 0;
+    generalStateReset()
     quizState.togglePromptVisible();
 });
 
+
+function generalStateReset () {
+    timer.resetTimer();
+    questionBank.setQuestion(0);
+    scoreBoard.currentScore = 0;
+    quizState.resultElem.textContent = ""
+}
 
 function quizFailed () {
     timer.stopTimer();

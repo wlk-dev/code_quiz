@@ -148,7 +148,11 @@ var scoreBoard = {
 
         // use JSON.stringify
         nickname = nickname.replaceAll(":", "-"); // : is used to separate data, so we dont want that being in the nickname
-        localStorage.setItem(String(`qsb-sc-${this.currentIndex}`), String(`${nickname}:${score}`))
+        if ( this.currentScore === "failed" ) {
+            localStorage.setItem(String(`qsb-sc-${this.currentIndex}`), String(`${nickname}:failed`))
+        } else {
+            localStorage.setItem(String(`qsb-sc-${this.currentIndex}`), String(`${nickname}:${score}`))
+        }
         this.updateTracking();
     },
 

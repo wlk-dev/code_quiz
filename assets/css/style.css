@@ -27,7 +27,7 @@ main {
     margin-top: 7%;
 }
 
-#quiz-timer, #score-link {
+#quiz-timer, #score-link, #home-link {
     font-size: 1.25rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 1%;
@@ -46,6 +46,15 @@ main {
     left: 0;
     text-decoration: none;
     transition: .6s;
+}
+
+#home-link {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-right: 48vw;
+    text-decoration: none;
+
 }
 
 #score-link:hover {
@@ -93,15 +102,24 @@ p {
 }
 
 
-div.question-section {
+div.quiz-section {
     padding: 2%;
 }
 
-#question-bottom, #question-top {
+#question-bottom, #question-top, #result {
     display: block;
     margin: 0 auto;
     max-width: 20vw;
     border-top: 1px solid var(--dark-color);
+}
+
+#result {
+    border: 0;
+    text-align: center;
+    font-size: x-large;
+    font-style: italic;
+    color: grey;
+    transition: .5s;
 }
 
 h2 {

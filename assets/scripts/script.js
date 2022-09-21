@@ -110,6 +110,9 @@ var scoreBoard = {
     aware : false,
     currentIndex : 0,
 
+    submitPrompt : document.querySelector(".post-quiz"), // submit score screen
+    promptVisible : true,
+
     init : function () { // in hindsight, i could probably store all scores in a single key, value pair
         var result;
         if ( !!( result = localStorage.getItem("qsb-tr-idx") ) ) {
@@ -135,6 +138,7 @@ var scoreBoard = {
             console.warn("Please init the scoreboard before trying to use it.")
             return;
         }
+        nickname = nickname.replaceAll(":", "-"); // : is used to separate data, so we dont want that being in the nickname
         localStorage.setItem(String(`qsb-sc-${this.currentIndex}`), String(`${nickname}:${score}`))
         this.updateTracking();
     },
@@ -163,10 +167,15 @@ var scoreBoard = {
         this.currentIndex = 0;
     },
 
+    togglePromptVisible : function () {
+        this.promptVisible = toggleElementDisplay(this.submitPrompt, "flex");
+    },
+
 }
 
 var quizState = {
     promptElem : document.querySelector(".quiz-prompt"),    // initial prompt to start quiz
+    startElem : document.getElementById("start-btn"),       // start quiz button
     quizElem : document.querySelector(".quiz-section"),     // containing div
     questionElem : document.querySelector(".question"),     // question h2 tag, this shows the actual question that is being asked
     listElem : document.getElementById("responses"),        // this is the where all the response will appear
@@ -218,10 +227,17 @@ quizState.listElem.addEventListener("click", function (event) {
         if ( (ques = questionBank.nextQuestion()) ) {
             quizState.presentQuestion(ques);
         } else {
+            quizState.toggleQuizVisible();
+            scoreBoard.togglePromptVisible();
             console.log("Quiz over!")
         }
 
     }
+});
+
+quizState.startElem.addEventListener("click", function () {
+    quizState.togglePromptVisible();
+    quizState.toggleQuizVisible();
 });
 
 function createListElements(length, ansIndex) { // this works as well
@@ -253,7 +269,9 @@ function toggleElementDisplay(element, preferredDisplay="block") {
 
 function main () {
     scoreBoard.init()
-    // quizState.toggleQuizVisible();
+    // quizState.togglePromptVisible();
+    quizState.toggleQuizVisible();
+    scoreBoard.togglePromptVisible();
     
     questionBank.addQuestion( "Commonly used data types DO NOT include:", ["strings", "booleans", "alerts", "numbers"], 2 );
     questionBank.addQuestion( "The condition in an if / else statement is enclosed with ____.", ["quotes", "curly brackets", "parentheses", "square brackets"], 2 );
@@ -261,7 +279,6 @@ function main () {
     questionBank.addQuestion( "String values must be enclosed within ____ when being assigned to variable.", ["commas", "curly brackets", "quotes", "parentheses"], 2 );
     questionBank.addQuestion( "A very useful tool used during development and debugging for printing content to the debugger is:", ["JavaScript", "terminal / bash", "for loops", "console.log"], 3 );
     quizState.presentQuestion( questionBank.getCurrentQuestion() )  
-    
     
 }
 

@@ -139,13 +139,38 @@ ol button {
 
 }
 
-ol button:hover {
+ol button:hover, #score-submit button:hover {
     color: var(--light-color);
     background-color: #333;
 }
 
-ol button:active {
+ol button:active, #score-submit button:active {
     transform: scale(1.1);
+}
+
+
+.post-quiz {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.post-quiz h2 {
+    font-weight: bold;
+    margin: 0;
+}
+
+#score-submit {
+    width: 20vw;
+    padding: 1% 0;
+}
+
+#score-submit button {
+    border-radius: 4px;
+    padding: 0 .5%;
+    background-color: var(--bg-color);
+    transition: .3s;
 }
 
 @media screen and (max-width: 992px) {

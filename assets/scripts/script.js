@@ -192,16 +192,16 @@ var Quiz = {
     },
 
     getScoreString : function () {
-        if ( this.failed ) {
-            this.failed = false;
-            return "Failed";
+        if ( this.failed ) { // if we failed, it means we ran out of time
+            this.failed = false; // reset variable
+            return "Failed"; // return score of `Failed`
         } else {
             return String(`${this.score}/50`);
         }
     },
 
     totalQuestions : function () { 
-        return this.questionObjs.length; // we don't want to store this in memory we want to be sure we are getting an up to date value
+        return this.questionObjs.length;
     },
 
     hasQuestions : function () {
@@ -221,8 +221,8 @@ var Quiz = {
 
     setCurrentQuestion : function (index) {
         if ( index > this.totalQuestions() || index < 0 ) {
-            console.warn(`${index} is not a valid question index, valid range: 0 .. ${this.totalQuestions()-1}`)
-            return;
+            console.warn(`${index} is not a valid question index, valid range: 0 .. ${this.totalQuestions()-1}`) // warn about out of range
+            return; // then do nothing, because we shouldnt try that
         }
         this.currentQuestion = index;
         return this.getCurrentQuestion();
@@ -233,33 +233,32 @@ var Quiz = {
             this.currentQuestion++;
             return this.getCurrentQuestion();
         }
-        return null;
     },
 
     evalResponse : function ( evt ) {
-        if ( evt.target.dataset.ans ) {
+        if ( evt.target.dataset.ans ) { // if we clicked the right button, yay, add to our score
             this.score += 10;
             $("#result").text("Correct!")
         } else {
-            Timer.invokePenalty();
-            $("#result").text("Wrong!")
+            Timer.invokePenalty(); // if we clicked the wrong button, booo, we get time penalty
+            $("#result").text("Wrong!") // also let them know they got it wrong
         }
     },
 
     presentQuestion : function ( question ) {
-        $("#responses").empty()
-        $(".question").text(question.text);
-        $("#responses").append( question.responses );
+        $("#responses").empty() // get rid of all the previous elements
+        $(".question").text(question.text); // change question text to the next question
+        $("#responses").append( question.responses ); // add our new elements
     },
 
     nextQuestion : function () {
         var res = this.getNextQuestion();
         if ( res ) {
             this.presentQuestion( res );
-            return true;
+            return true; // return true if we presented a question
         }
-        return false
-    },
+        return false // return false if we didn't
+    },  // we use this to tell when to end the quiz
 }
 
 $("#score-link").click( function (evt) {
@@ -302,6 +301,8 @@ $("#reset-score").click( function () {
 });
 
 function main () {
+    PageState.showState(PageState.quizPrompt);
+    
     BoardStorage.init();
     ScoreBoard.loadTable(BoardStorage.getScores());
 
@@ -312,8 +313,6 @@ function main () {
     QuestionBank.addQuestion( "A very useful tool used during development and debugging for printing content to the debugger is:", ["JavaScript", "terminal / bash", "for loops", "console.log"], 3 );
     Quiz.questionObjs = QuestionBank.questionObjs;
 
-    PageState.hideAll();
-    PageState.showState(PageState.quizPrompt);
 }
 
 main();

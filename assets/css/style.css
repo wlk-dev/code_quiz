@@ -132,11 +132,16 @@ h2 {
 ol button, #submit-result, #reset-score {
     display: block;
     margin: .5% auto;
+    min-width: 15vw;
     border-radius: 4px;
     padding: .5% .5%;
     background-color: var(--bg-color);
     transition: .3s;
 
+}
+
+#reset-score {
+    min-width: 22vw;
 }
 
 ol button:hover, #submit-result:hover, #reset-score:hover {
@@ -166,12 +171,34 @@ label {
 
 @media screen and (max-width: 992px) {
     header {
-        padding: 2%;
+        padding: 5%;
+    }
+
+    h1 {
+        font-size: x-large;
+    }
+
+    h2, p #result{
+        font-size: medium;
+    }
+
+    p {
+        font-weight: 400;
+        margin-bottom: 4%;
+    }
+
+    ol button, #submit-result, #reset-score, #start-btn { 
+        font-size: large;
+        min-width: 50vw;
+    }
+
+    #reset-score {
+        min-width: 55vw;
     }
 }
 
 @media screen and (max-width: 628px) {
     header {
-        padding: 3.2%;
+        padding: 4.2%;
     }
 }

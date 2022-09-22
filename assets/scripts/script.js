@@ -277,12 +277,10 @@ $("#start-btn").click( function(evt) {
     Quiz.presentQuestion( Quiz.getCurrentQuestion() )
 });
 
-$(".quiz-section").click( function(evt) {
-    if (evt.target.matches("button")) {
-        Quiz.evalResponse( evt )
-        if ( !Quiz.nextQuestion() ) {
-            Quiz.completedQuiz()
-        }
+$(".quiz-section").on("click", "button", function(evt) {
+    Quiz.evalResponse( evt )
+    if ( !Quiz.nextQuestion() ) {
+        Quiz.completedQuiz()
     }
 });
 
